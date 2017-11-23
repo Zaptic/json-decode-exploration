@@ -7,7 +7,7 @@ import Test exposing (..)
 
 
 nestedJson =
-    """"
+    """
 {"a": {"b": {"c": [1,2,3]}}}
 """
 
@@ -20,8 +20,8 @@ suite =
                 let
                     decoder =
                         decode identity
-                            |> requiredAt [ "a", "b", "c" ] (Decode.list Decode.int)
+                            |> optionalAt [ "a", "b", "c" ] (Decode.list Decode.int |> Decode.map Just) Nothing
                 in
                 decodeString decoder nestedJson
-                    |> Expect.equal (Success [ 1, 2, 3 ])
+                    |> Expect.equal (Success <| Just [ 1, 2, 3 ])
         ]
